@@ -18,6 +18,25 @@ module.exports = class PokemonBattleEngine {
             Name: item.Name,
             Status: [],
             AccuracyModifier: 1,
+            MovePool: item.MovePool.map((attack, attackIndex) => ({
+              Name: attack.Name,
+              PP: attack.PP,
+              Description: this.#gameData.Attacks.find(
+                (desc) => desc.Name === attack.Name
+              ).Description,
+              Power: this.#gameData.Attacks.find(
+                (desc) => desc.Name === attack.Name
+              ).Power,
+              Accuracy: this.#gameData.Attacks.find(
+                (desc) => desc.Name === attack.Name
+              ).Accuracy,
+              Contact: this.#gameData.Attacks.find(
+                (desc) => desc.Name === attack.Name
+              ).Contact,
+              Type: this.#gameData.Attacks.find(
+                (desc) => desc.Name === attack.Name
+              ).Type,
+            })),
             StatModifier: {
               Hp: 1,
               Attack: 1,
@@ -59,6 +78,25 @@ module.exports = class PokemonBattleEngine {
             Name: item.Name,
             Status: [],
             AccuracyModifier: 1,
+            MovePool: item.MovePool.map((attack, attackIndex) => ({
+              Name: attack.Name,
+              PP: attack.PP,
+              Description: this.#gameData.Attacks.find(
+                (desc) => desc.Name === attack.Name
+              ).Description,
+              Power: this.#gameData.Attacks.find(
+                (desc) => desc.Name === attack.Name
+              ).Power,
+              Accuracy: this.#gameData.Attacks.find(
+                (desc) => desc.Name === attack.Name
+              ).Accuracy,
+              Contact: this.#gameData.Attacks.find(
+                (desc) => desc.Name === attack.Name
+              ).Contact,
+              Type: this.#gameData.Attacks.find(
+                (desc) => desc.Name === attack.Name
+              ).Type,
+            })),
             StatModifier: {
               Hp: 1,
               Attack: 1,
@@ -228,6 +266,6 @@ module.exports = class PokemonBattleEngine {
       : "SecondTeam";
   }
   #getRandomNumber(min, max) {
-    return Math.random() * (max - min) + min;
+    return Math.round(Math.random() * (max - min) + min);
   }
 };

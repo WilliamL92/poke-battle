@@ -6,7 +6,7 @@
       "Pokemons": [
         {
           "Name": "Bulbasaur",
-          "Movepool": [{ "Name": "Vine Whip", "PP": 25 }],
+          "MovePool": [{ "Name": "Vine Whip", "PP": 25 }],
           "Ability": "Overgrow",
           "Nature": "Adamant",
           "Level": 50,
@@ -32,7 +32,7 @@
       "Pokemons": [
         {
           "Name": "Squirtle",
-          "Movepool": [{ "Name": "Water Gun", "PP": 25 }],
+          "MovePool": [{ "Name": "Water Gun", "PP": 25 }],
           "Ability": "Torrent",
           "Nature": "Modest",
           "Level": 50,
@@ -60,7 +60,8 @@
       "Power": "45",
       "Accuracy": "100",
       "Contact": "Physic",
-      "Priority": "1"
+      "Priority": "1",
+      "Description": "The Pokémon lashes the target with slender, whip-like vines."
     },
     {
       "Name": "Water Gun",
@@ -68,7 +69,8 @@
       "Power": "40",
       "Accuracy": "100",
       "Contact": "Special",
-      "Priority": "1"
+      "Priority": "1",
+      "Description": "The Pokémon shoots a jet of water at the target."
     },
     {
       "Name": "Ember",
@@ -76,7 +78,8 @@
       "Power": "40",
       "Accuracy": "100",
       "Contact": "Physic",
-      "Priority": "1"
+      "Priority": "1",
+      "Description": "The Pokémon attacks by spitting small flames at the target."
     }
   ],
   "Abilities": [
