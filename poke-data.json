@@ -1,0 +1,262 @@
+{
+  "Teams": {
+    "FirstTeam": {
+      "Name": "Ash",
+      "ActivePokemonIndex": 0,
+      "Pokemons": [
+        {
+          "Name": "Bulbasaur",
+          "Movepool": [{ "Name": "Vine Whip", "PP": 25 }],
+          "Ability": "Overgrow",
+          "Nature": "Adamant",
+          "Level": 50,
+          "EVS": {
+            "Attack": 255,
+            "Speed": 255,
+            "SpeDefense": 4
+          },
+          "IVS": {
+            "Hp": 31,
+            "Attack": 31,
+            "Defense": 31,
+            "SpeAttack": 31,
+            "SpeDefense": 31,
+            "Speed": 31
+          }
+        }
+      ]
+    },
+    "SecondTeam": {
+      "Name": "Gary Oak",
+      "ActivePokemonIndex": 0,
+      "Pokemons": [
+        {
+          "Name": "Squirtle",
+          "Movepool": [{ "Name": "Water Gun", "PP": 25 }],
+          "Ability": "Torrent",
+          "Nature": "Modest",
+          "Level": 50,
+          "EVS": {
+            "SpeAttack": 255,
+            "Speed": 255,
+            "Defense": 4
+          },
+          "IVS": {
+            "Hp": 31,
+            "Attack": 31,
+            "Defense": 31,
+            "SpeAttack": 31,
+            "SpeDefense": 31,
+            "Speed": 31
+          }
+        }
+      ]
+    }
+  },
+  "Attacks": [
+    {
+      "Name": "Vine Whip",
+      "Type": "Grass",
+      "Power": "45",
+      "Accuracy": "100",
+      "Contact": "Physic",
+      "Priority": "1"
+    },
+    {
+      "Name": "Water Gun",
+      "Type": "Water",
+      "Power": "40",
+      "Accuracy": "100",
+      "Contact": "Special",
+      "Priority": "1"
+    },
+    {
+      "Name": "Ember",
+      "Type": "Fire",
+      "Power": "40",
+      "Accuracy": "100",
+      "Contact": "Physic",
+      "Priority": "1"
+    }
+  ],
+  "Abilities": [
+    {
+      "Name": "Overgrow",
+      "Effect": { "TypeMoves": "Grass", "Percent": "50", "Vector": "Increase" },
+      "Trigger": { "Stat": "HP", "If": "<=", "Percent": "10" }
+    },
+    {
+      "Name": "Torrent",
+      "Effect": { "TypeMoves": "Water", "Percent": "50", "Vector": "Increase" },
+      "Trigger": { "Stat": "HP", "If": "<=", "Percent": "10" }
+    },
+    {
+      "Name": "Blaze",
+      "Effect": { "TypeMoves": "Fire", "Percent": "50", "Vector": "Increase" },
+      "Trigger": { "Stat": "HP", "If": "<=", "Percent": "10" }
+    }
+  ],
+  "Objects": [],
+  "Types": [
+    {
+      "Name": "Normal",
+      "Weakness": ["Fight"],
+      "Stronger": [],
+      "Immune": ["Ghost"]
+    },
+    {
+      "Name": "Fire",
+      "Weakness": ["Water", "Ground", "Rock"],
+      "Stronger": ["Grass", "Ice", "Insect", "Steel"],
+      "Immune": []
+    },
+    {
+      "Name": "Water",
+      "Weakness": ["Grass", "Electric"],
+      "Stronger": ["Fire", "Ground", "Rock"],
+      "Immune": []
+    },
+    {
+      "Name": "Grass",
+      "Weakness": ["Fire", "Ice", "Poison", "Flying", "Insect"],
+      "Stronger": ["Water", "Ground", "Rock"],
+      "Immune": []
+    },
+    {
+      "Name": "Electric",
+      "Weakness": ["Ground"],
+      "Stronger": ["Water", "Flying"],
+      "Immune": []
+    },
+    {
+      "Name": "Ice",
+      "Weakness": ["Fire", "Fight", "Rock", "Steel"],
+      "Stronger": ["Grass", "Ground", "Flying", "Dragon"],
+      "Immune": []
+    },
+    {
+      "Name": "Fight",
+      "Weakness": ["Flying", "Psychic", "Fairy"],
+      "Stronger": ["Normal", "Ice", "Rock", "Dark", "Steel"],
+      "Immune": ["Ghost"]
+    },
+    {
+      "Name": "Poison",
+      "Weakness": ["Ground", "Psychic"],
+      "Stronger": ["Grass", "Fairy"],
+      "Immune": []
+    },
+    {
+      "Name": "Ground",
+      "Weakness": ["Water", "Grass", "Ice"],
+      "Stronger": ["Fire", "Electric", "Poison", "Rock", "Steel"],
+      "Immune": ["Electric"]
+    },
+    {
+      "Name": "Flying",
+      "Weakness": ["Electric", "Ice", "Rock"],
+      "Stronger": ["Grass", "Fight", "Insect"],
+      "Immune": ["Ground"]
+    },
+    {
+      "Name": "Psychic",
+      "Weakness": ["Bug", "Ghost", "Dark"],
+      "Stronger": ["Fight", "Poison"],
+      "Immune": []
+    },
+    {
+      "Name": "Insect",
+      "Weakness": ["Fire", "Flying", "Rock"],
+      "Stronger": ["Grass", "Psychic", "Dark"],
+      "Immune": []
+    },
+    {
+      "Name": "Rock",
+      "Weakness": ["Water", "Grass", "Fight", "Ground", "Steel"],
+      "Stronger": ["Fire", "Ice", "Flying", "Bug"],
+      "Immune": []
+    },
+    {
+      "Name": "Ghost",
+      "Weakness": ["Ghost", "Dark"],
+      "Stronger": ["Psychic", "Ghost"],
+      "Immune": ["Normal", "Fight"]
+    },
+    {
+      "Name": "Dragon",
+      "Weakness": ["Ice", "Dragon", "Fairy"],
+      "Stronger": ["Dragon"],
+      "Immune": []
+    },
+    {
+      "Name": "Dark",
+      "Weakness": ["Fight", "Bug", "Fairy"],
+      "Stronger": ["Psychic", "Ghost"],
+      "Immune": ["Psychic"]
+    },
+    {
+      "Name": "Steel",
+      "Weakness": ["Fire", "Fight", "Ground"],
+      "Stronger": ["Ice", "Rock", "Fairy"],
+      "Immune": ["Poison"]
+    },
+    {
+      "Name": "Fairy",
+      "Weakness": ["Poison", "Steel"],
+      "Stronger": ["Fight", "Dragon", "Dark"],
+      "Immune": ["Dragon"]
+    }
+  ],
+  "Natures": [
+    { "Name": "Bold", "Plus": ["Defense"], "Less": ["Attack"] },
+    { "Name": "Quirky", "Plus": [], "Less": [] },
+    { "Name": "Brave", "Plus": ["Attack"], "Less": ["Speed"] },
+    { "Name": "Calm", "Plus": ["SpeDefense"], "Less": ["Attack"] },
+    { "Name": "Quiet", "Plus": ["SpeAttack"], "Less": ["Speed"] },
+    { "Name": "Docile", "Plus": [], "Less": [] },
+    { "Name": "Mild", "Plus": ["SpeAttack"], "Less": ["Defense"] },
+    { "Name": "Rash", "Plus": ["SpeAttack"], "Less": ["SpeDefense"] },
+    { "Name": "Gentle", "Plus": ["SpeDefense"], "Less": ["Defense"] },
+    { "Name": "Hardy", "Plus": [], "Less": [] },
+    { "Name": "Jolly", "Plus": ["Speed"], "Less": ["SpeAttack"] },
+    { "Name": "Lax", "Plus": ["Defense"], "Less": ["SpeDefense"] },
+    { "Name": "Impish", "Plus": ["Defense"], "Less": ["SpeAttack"] },
+    { "Name": "Sassy", "Plus": ["SpeDefense"], "Less": ["Speed"] },
+    { "Name": "Naughty", "Plus": ["Attack"], "Less": ["SpeDefense"] },
+    { "Name": "Modest", "Plus": ["SpeAttack"], "Less": ["Attack"] },
+    { "Name": "Naive", "Plus": ["Speed"], "Less": ["SpeDefense"] },
+    { "Name": "Hasty", "Plus": ["Speed"], "Less": ["Defense"] },
+    { "Name": "Careful", "Plus": ["SpeDefense"], "Less": ["SpeAttack"] },
+    { "Name": "Bashful", "Plus": [], "Less": [] },
+    { "Name": "Adamant", "Plus": ["Attack"], "Less": ["SpeAttack"] },
+    { "Name": "Serious", "Plus": [], "Less": [] },
+    { "Name": "Lonely", "Plus": ["Attack"], "Less": ["Defense"] },
+    { "Name": "Timid", "Plus": ["Speed"], "Less": ["Attack"] }
+  ],
+  "Pokemons": [
+    {
+      "Name": "Squirtle",
+      "Type": ["Water"],
+      "BaseStat": {
+        "Hp": 44,
+        "Attack": 48,
+        "Defense": 65,
+        "SpeAttack": 50,
+        "SpeDefense": 64,
+        "Speed": 43
+      }
+    },
+    {
+      "Name": "Bulbasaur",
+      "Type": ["Grass"],
+      "BaseStat": {
+        "Hp": 45,
+        "Attack": 49,
+        "Defense": 49,
+        "SpeAttack": 65,
+        "SpeDefense": 65,
+        "Speed": 45
+      }
+    }
+  ]
+}
