@@ -12,7 +12,7 @@ app.set("views", "./views");
 
 const data = readFileSync(process.env.POKEMON_DATA_FILE_PATH);
 const pokemonBattleEngine = new PokemonBattleEngine(JSON.parse(data));
-console.log(pokemonBattleEngine.getGameState().FirstTeam.Pokemons[0].MovePool);
+console.log(pokemonBattleEngine.getGameState());
 
 app.get("/", (req, res) => {
   res.render("index", {

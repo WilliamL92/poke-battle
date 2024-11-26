@@ -11,130 +11,14 @@ module.exports = class PokemonBattleEngine {
             this.#getWhichTeamPlayInFirstBasedOnPokemonSpeed()
           ].ActivePokemonIndex,
       },
-      FirstTeam: {
-        ActivePokemon: this.#gameData.Teams.FirstTeam.ActivePokemonIndex,
-        Pokemons: this.#gameData.Teams.FirstTeam.Pokemons.map(
-          (item, index) => ({
-            Name: item.Name,
-            Status: [],
-            AccuracyModifier: 1,
-            MovePool: item.MovePool.map((attack, attackIndex) => ({
-              Name: attack.Name,
-              PP: attack.PP,
-              Description: this.#gameData.Attacks.find(
-                (desc) => desc.Name === attack.Name
-              ).Description,
-              Power: this.#gameData.Attacks.find(
-                (desc) => desc.Name === attack.Name
-              ).Power,
-              Accuracy: this.#gameData.Attacks.find(
-                (desc) => desc.Name === attack.Name
-              ).Accuracy,
-              Contact: this.#gameData.Attacks.find(
-                (desc) => desc.Name === attack.Name
-              ).Contact,
-              Type: this.#gameData.Attacks.find(
-                (desc) => desc.Name === attack.Name
-              ).Type,
-            })),
-            StatModifier: {
-              Hp: 1,
-              Attack: 1,
-              Defense: 1,
-              SpeAttack: 1,
-              SpeDefense: 1,
-              Speed: 1,
-            },
-            CalculatedStat: {
-              Hp: this.#getCalculatedBaseStat("FirstTeam", index, "Hp"),
-              Attack: this.#getCalculatedBaseStat("FirstTeam", index, "Attack"),
-              Defense: this.#getCalculatedBaseStat(
-                "FirstTeam",
-                index,
-                "Defense"
-              ),
-              SpeAttack: this.#getCalculatedBaseStat(
-                "FirstTeam",
-                index,
-                "SpeAttack"
-              ),
-              SpeDefense: this.#getCalculatedBaseStat(
-                "FirstTeam",
-                index,
-                "SpeDefense"
-              ),
-              Speed: this.#getCalculatedBaseStat("FirstTeam", index, "Speed"),
-            },
-            BaseStat: this.#gameData.Pokemons.find(
-              (poke) => poke.Name === item.Name
-            ).BaseStat,
-          })
-        ),
-      },
-      SecondTeam: {
-        ActivePokemon: this.#gameData.Teams.SecondTeam.ActivePokemonIndex,
-        Pokemons: this.#gameData.Teams.SecondTeam.Pokemons.map(
-          (item, index) => ({
-            Name: item.Name,
-            Status: [],
-            AccuracyModifier: 1,
-            MovePool: item.MovePool.map((attack, attackIndex) => ({
-              Name: attack.Name,
-              PP: attack.PP,
-              Description: this.#gameData.Attacks.find(
-                (desc) => desc.Name === attack.Name
-              ).Description,
-              Power: this.#gameData.Attacks.find(
-                (desc) => desc.Name === attack.Name
-              ).Power,
-              Accuracy: this.#gameData.Attacks.find(
-                (desc) => desc.Name === attack.Name
-              ).Accuracy,
-              Contact: this.#gameData.Attacks.find(
-                (desc) => desc.Name === attack.Name
-              ).Contact,
-              Type: this.#gameData.Attacks.find(
-                (desc) => desc.Name === attack.Name
-              ).Type,
-            })),
-            StatModifier: {
-              Hp: 1,
-              Attack: 1,
-              Defense: 1,
-              SpeAttack: 1,
-              SpeDefense: 1,
-              Speed: 1,
-            },
-            CalculatedStat: {
-              Hp: this.#getCalculatedBaseStat("SecondTeam", index, "Hp"),
-              Attack: this.#getCalculatedBaseStat(
-                "SecondTeam",
-                index,
-                "Attack"
-              ),
-              Defense: this.#getCalculatedBaseStat(
-                "SecondTeam",
-                index,
-                "Defense"
-              ),
-              SpeAttack: this.#getCalculatedBaseStat(
-                "SecondTeam",
-                index,
-                "SpeAttack"
-              ),
-              SpeDefense: this.#getCalculatedBaseStat(
-                "SecondTeam",
-                index,
-                "SpeDefense"
-              ),
-              Speed: this.#getCalculatedBaseStat("SecondTeam", index, "Speed"),
-            },
-            BaseStat: this.#gameData.Pokemons.find(
-              (poke) => poke.Name === item.Name
-            ).BaseStat,
-          })
-        ),
-      },
+      FirstTeam: this.#initPlayerGameStateData(
+        this.#gameData.Teams.FirstTeam,
+        null
+      ),
+      SecondTeam: this.#initPlayerGameStateData(
+        this.#gameData.Teams.SecondTeam,
+        null
+      ),
     };
   }
   firstTeamChoice(firstTeamChoice) {
@@ -143,17 +27,85 @@ module.exports = class PokemonBattleEngine {
   getGameState() {
     return this.#gameState;
   }
+  #initPlayerGameStateData(teamData, teamDataState) {
+    return {
+      ActivePokemon: teamData.ActivePokemonIndex,
+      Pokemons: teamData.Pokemons.map((item, index) => ({
+        Name: item.Name,
+        Status: [],
+        AccuracyModifier: 1,
+        MovePool: item.MovePool.map((attack, attackIndex) => ({
+          Name: attack.Name,
+          PP: attack.PP,
+          Description: this.#gameData.Attacks.find(
+            (desc) => desc.Name === attack.Name
+          ).Description,
+          Power: this.#gameData.Attacks.find(
+            (desc) => desc.Name === attack.Name
+          ).Power,
+          Accuracy: this.#gameData.Attacks.find(
+            (desc) => desc.Name === attack.Name
+          ).Accuracy,
+          Contact: this.#gameData.Attacks.find(
+            (desc) => desc.Name === attack.Name
+          ).Contact,
+          Type: this.#gameData.Attacks.find((desc) => desc.Name === attack.Name)
+            .Type,
+        })),
+        StatModifier: {
+          Hp: 1,
+          Attack: 1,
+          Defense: 1,
+          SpeAttack: 1,
+          SpeDefense: 1,
+          Speed: 1,
+        },
+        CalculatedStat: {
+          Hp: this.#getCalculatedBaseStat(teamData, teamDataState, index, "Hp"),
+          Attack: this.#getCalculatedBaseStat(
+            teamData,
+            teamDataState,
+            index,
+            "Attack"
+          ),
+          Defense: this.#getCalculatedBaseStat(
+            teamData,
+            teamDataState,
+            index,
+            "Defense"
+          ),
+          SpeAttack: this.#getCalculatedBaseStat(
+            teamData,
+            teamDataState,
+            index,
+            "SpeAttack"
+          ),
+          SpeDefense: this.#getCalculatedBaseStat(
+            teamData,
+            teamDataState,
+            index,
+            "SpeDefense"
+          ),
+          Speed: this.#getCalculatedBaseStat(
+            teamData,
+            teamDataState,
+            index,
+            "Speed"
+          ),
+        },
+        BaseStat: this.#gameData.Pokemons.find(
+          (poke) => poke.Name === item.Name
+        ).BaseStat,
+      })),
+    };
+  }
   #getPokemonDataByIndex(team, pokemonName) {
     return this.#gameData.Teams[team].Pokemons[pokemonName];
   }
-  #getCalculatedBaseStat(teamName, pokemonIndex, statName) {
-    // Récupérer l'équipe appropriée
-    const teamData = this.#gameData.Teams[teamName];
-    if (!teamData || !teamData.Pokemons[pokemonIndex]) return null;
-
+  #getCalculatedBaseStat(team, teamGameState, pokemonIndex, statName) {
+    if (!team) return null;
     // Récupérer les données du Pokémon dans l'équipe par son index
-    const teamPokemon = teamData.Pokemons[pokemonIndex];
-
+    const teamPokemon = team.Pokemons[pokemonIndex];
     // Récupérer les données de base du Pokémon global (stats de base)
     const basePokemonData = this.#gameData.Pokemons.find(
       (p) => p.Name === teamPokemon.Name
@@ -167,29 +119,16 @@ module.exports = class PokemonBattleEngine {
 
     // Appliquer la modification des stats (buffs/débuffs) via StatModifier
     if (this.#gameState == null) {
-      this.firstTeamPokemonsStatModifier =
-        this.#gameData.Teams.FirstTeam.Pokemons.map((item) => ({
-          StatModifier: {
-            Hp: 1,
-            Attack: 1,
-            Defense: 1,
-            SpeAttack: 1,
-            SpeDefense: 1,
-            Speed: 1,
-          },
-        }));
-
-      this.secondTeamPokemonsStatModifier =
-        this.#gameData.Teams.SecondTeam.Pokemons.map((item) => ({
-          StatModifier: {
-            Hp: 1,
-            Attack: 1,
-            Defense: 1,
-            SpeAttack: 1,
-            SpeDefense: 1,
-            Speed: 1,
-          },
-        }));
+      this.firstTeamPokemonsStatModifier = team.Pokemons.map((item) => ({
+        StatModifier: {
+          Hp: 1,
+          Attack: 1,
+          Defense: 1,
+          SpeAttack: 1,
+          SpeDefense: 1,
+          Speed: 1,
+        },
+      }));
 
       this.#gameState = {
         FirstTeam: {
@@ -201,8 +140,7 @@ module.exports = class PokemonBattleEngine {
       };
     }
     const statModifier =
-      this.#gameState[teamName].Pokemons[pokemonIndex].StatModifier[statName] ||
-      1;
+      teamGameState?.Pokemons?.[pokemonIndex]?.StatModifier?.[statName] ?? 1;
 
     if (statName === "Hp") {
       // Formule spécifique pour les HP
@@ -240,23 +178,27 @@ module.exports = class PokemonBattleEngine {
 
   #getWhichTeamPlayInFirstBasedOnPokemonSpeed() {
     return this.#getCalculatedBaseStat(
-      "FirstTeam",
+      this.#gameData.Teams.FirstTeam,
+      this.#gameState?.FirstTeam,
       this.#gameData.Teams.FirstTeam.ActivePokemonIndex,
       "Speed"
     ) >
       this.#getCalculatedBaseStat(
-        "SecondTeam",
+        this.#gameData.Teams.SecondTeam,
+        this.#gameState?.SecondTeam,
         this.#gameData.Teams.SecondTeam.ActivePokemonIndex,
         "Speed"
       )
       ? "FirstTeam"
       : this.#getCalculatedBaseStat(
-          "FirstTeam",
+          this.#gameData.Teams.FirstTeam,
+          this.#gameState?.FirstTeam,
           this.#gameData.Teams.FirstTeam.ActivePokemonIndex,
           "Speed"
         ) ==
         this.#getCalculatedBaseStat(
-          "SecondTeam",
+          this.#gameData.Teams.SecondTeam,
+          this.#gameState?.SecondTeam,
           this.#gameData.Teams.SecondTeam.ActivePokemonIndex,
           "Speed"
         )
