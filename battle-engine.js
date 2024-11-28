@@ -22,10 +22,90 @@ module.exports = class PokemonBattleEngine {
     };
   }
   firstTeamChoice(firstTeamChoice) {
-    return this;
+    if (firstTeamChoice.Type === "UseMove") {
+      const secondTeamPokemon =
+        this.#gameState.SecondTeam.Pokemons[
+          this.#gameState.SecondTeam.ActivePokemon
+        ];
+      const firstTeamPokemon =
+        this.#gameState.FirstTeam.Pokemons[
+          this.#gameState.FirstTeam.ActivePokemon
+        ];
+
+      const firstTeamAttack = firstTeamPokemon.MovePool.find(
+        (atk) => atk.Name === firstTeamChoice.Name
+      );
+      this.#gameState.SecondTeam.Pokemons[
+        this.#gameState.SecondTeam.ActivePokemon
+      ].CalculatedStat.Hp -= this.#calculateDamage(
+        firstTeamAttack,
+        firstTeamPokemon,
+        secondTeamPokemon
+      );
+    }
+  }
+
+  secondTeamChoice(secondTeamChoice) {
+    if (secondTeamChoice.Type === "UseMove") {
+      const secondTeamPokemon =
+        this.#gameState.SecondTeam.Pokemons[
+          this.#gameState.SecondTeam.ActivePokemon
+        ];
+      const firstTeamPokemon =
+        this.#gameState.FirstTeam.Pokemons[
+          this.#gameState.FirstTeam.ActivePokemon
+        ];
+
+      const secondTeamAttack = secondTeamPokemon.MovePool.find(
+        (atk) => atk.Name === secondTeamChoice.Name
+      );
+      this.#gameState.FirstTeam.Pokemons[
+        this.#gameState.FirstTeam.ActivePokemon
+      ].CalculatedStat.Hp += this.#calculateDamage(
+        secondTeamAttack,
+        secondTeamPokemon,
+        firstTeamPokemon
+      );
+    }
   }
   getGameState() {
     return this.#gameState;
+  }
+  #calculateDamage(attack, pokemonRoot, pokemonTarget) {
+    const attackDetails = pokemonRoot.MovePool.find(
+      (atk) => atk.Name === attack.Name
+    );
+
+    const stab = attackDetails.Type === pokemonRoot.Type ? 1.5 : 1;
+
+    const efficacity = pokemonTarget.Type.map((targetType) => {
+      const typeData = this.#gameData.Types.find(
+        (type) => type.Name === targetType
+      );
+      if (typeData.Immune.includes(attack.Type)) return 0; // Ineffective
+      if (typeData.Weakness.includes(attack.Type)) return 2; // Super effective
+      if (typeData.Stronger.includes(attack.Type)) return 0.5; // Not very effective
+      return 1; // Neutral
+    }).reduce((acc, curr) => acc * curr, 1);
+
+    const baseCritChance = 512;
+    const critChanceToFind = pokemonRoot.CalculatedStat.Speed / baseCritChance;
+    const randomValue = this.#getRandomNumber(0, baseCritChance - 1);
+    const critChance = randomValue < critChanceToFind * baseCritChance ? 2 : 1;
+
+    const roll = this.#getRandomNumber(85, 100) / 100;
+
+    const finalMultiplicator = stab * efficacity * critChance * roll;
+
+    return Math.floor(
+      (((pokemonRoot.Level * 0.4 + 2) *
+        pokemonRoot.CalculatedStat.Attack *
+        attackDetails.Power) /
+        pokemonTarget.CalculatedStat.Defense /
+        50 +
+        2) *
+        finalMultiplicator
+    );
   }
   #initPlayerGameStateData(teamData, teamDataState) {
     return {
@@ -34,6 +114,9 @@ module.exports = class PokemonBattleEngine {
         Name: item.Name,
         Status: [],
         AccuracyModifier: 1,
+        Level: item.Level,
+        Type: this.#gameData.Pokemons.find((pkm) => pkm.Name === item.Name)
+          .Type,
         MovePool: item.MovePool.map((attack, attackIndex) => ({
           Name: attack.Name,
           PP: attack.PP,
@@ -62,6 +145,12 @@ module.exports = class PokemonBattleEngine {
         },
         CalculatedStat: {
           Hp: this.#getCalculatedBaseStat(teamData, teamDataState, index, "Hp"),
+          MaxHp: this.#getCalculatedBaseStat(
+            teamData,
+            teamDataState,
+            index,
+            "Hp"
+          ),
           Attack: this.#getCalculatedBaseStat(
             teamData,
             teamDataState,
