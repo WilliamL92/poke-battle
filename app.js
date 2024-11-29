@@ -4,6 +4,7 @@ dotenv.config();
 const { readFileSync } = require("fs");
 const express = require("express");
 const PokemonBattleEngine = require("./battle-engine");
+const playBattle = require("./pokemon-battle");
 const app = express();
 
 app.set("view engine", "ejs");
@@ -12,40 +13,8 @@ app.set("views", "./views");
 
 const data = readFileSync(process.env.POKEMON_DATA_FILE_PATH);
 const pokemonBattleEngine = new PokemonBattleEngine(JSON.parse(data));
-console.log(
-  `${
-    pokemonBattleEngine.getGameState().FirstTeam.Pokemons[0].CalculatedStat.Hp
-  } / ${
-    pokemonBattleEngine.getGameState().FirstTeam.Pokemons[0].CalculatedStat
-      .MaxHp
-  } HP`
-);
-console.log(
-  `${
-    pokemonBattleEngine.getGameState().SecondTeam.Pokemons[0].CalculatedStat.Hp
-  } / ${
-    pokemonBattleEngine.getGameState().SecondTeam.Pokemons[0].CalculatedStat
-      .MaxHp
-  } HP`
-);
-pokemonBattleEngine.firstTeamChoice({ Type: "UseMove", Name: "Vine Whip" });
-pokemonBattleEngine.secondTeamChoice({ Type: "UseMove", Name: "Water Gun" });
-console.log(
-  `${
-    pokemonBattleEngine.getGameState().FirstTeam.Pokemons[0].CalculatedStat.Hp
-  } / ${
-    pokemonBattleEngine.getGameState().FirstTeam.Pokemons[0].CalculatedStat
-      .MaxHp
-  } HP`
-);
-console.log(
-  `${
-    pokemonBattleEngine.getGameState().SecondTeam.Pokemons[0].CalculatedStat.Hp
-  } / ${
-    pokemonBattleEngine.getGameState().SecondTeam.Pokemons[0].CalculatedStat
-      .MaxHp
-  } HP`
-);
+
+playBattle(pokemonBattleEngine);
 
 app.get("/", (req, res) => {
   res.render("index", {

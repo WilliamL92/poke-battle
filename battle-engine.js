@@ -1,6 +1,7 @@
 module.exports = class PokemonBattleEngine {
   #gameState;
   #gameData;
+  #lastRoundState = { FirstTeam: {}, SecondTeam: {} };
   constructor(gameData) {
     this.#gameData = gameData;
     this.#gameState = {
@@ -35,13 +36,16 @@ module.exports = class PokemonBattleEngine {
       const firstTeamAttack = firstTeamPokemon.MovePool.find(
         (atk) => atk.Name === firstTeamChoice.Name
       );
-      this.#gameState.SecondTeam.Pokemons[
-        this.#gameState.SecondTeam.ActivePokemon
-      ].CalculatedStat.Hp -= this.#calculateDamage(
+
+      const damageCalculator = this.#calculateDamage(
         firstTeamAttack,
         firstTeamPokemon,
         secondTeamPokemon
       );
+      this.#lastRoundState.FirstTeam = damageCalculator;
+      this.#gameState.SecondTeam.Pokemons[
+        this.#gameState.SecondTeam.ActivePokemon
+      ].CalculatedStat.Hp -= damageCalculator.HpLost;
     }
   }
 
@@ -59,17 +63,23 @@ module.exports = class PokemonBattleEngine {
       const secondTeamAttack = secondTeamPokemon.MovePool.find(
         (atk) => atk.Name === secondTeamChoice.Name
       );
-      this.#gameState.FirstTeam.Pokemons[
-        this.#gameState.FirstTeam.ActivePokemon
-      ].CalculatedStat.Hp += this.#calculateDamage(
+
+      const damageCalculator = this.#calculateDamage(
         secondTeamAttack,
         secondTeamPokemon,
         firstTeamPokemon
       );
+      this.#lastRoundState.SecondTeam = damageCalculator;
+      this.#gameState.FirstTeam.Pokemons[
+        this.#gameState.FirstTeam.ActivePokemon
+      ].CalculatedStat.Hp -= damageCalculator.HpLost;
     }
   }
   getGameState() {
     return this.#gameState;
+  }
+  getLastRoundState() {
+    return this.#lastRoundState;
   }
   #calculateDamage(attack, pokemonRoot, pokemonTarget) {
     const attackDetails = pokemonRoot.MovePool.find(
@@ -89,27 +99,50 @@ module.exports = class PokemonBattleEngine {
     }).reduce((acc, curr) => acc * curr, 1);
 
     const baseCritChance = 512;
-    const critChanceToFind = pokemonRoot.CalculatedStat.Speed / baseCritChance;
+    const critThreshold = pokemonRoot.CalculatedStat.Speed;
     const randomValue = this.#getRandomNumber(0, baseCritChance - 1);
-    const critChance = randomValue < critChanceToFind * baseCritChance ? 2 : 1;
+
+    const critChance = randomValue < critThreshold ? 2 : 1;
 
     const roll = this.#getRandomNumber(85, 100) / 100;
 
     const finalMultiplicator = stab * efficacity * critChance * roll;
 
-    return Math.floor(
-      (((pokemonRoot.Level * 0.4 + 2) *
-        pokemonRoot.CalculatedStat.Attack *
-        attackDetails.Power) /
-        pokemonTarget.CalculatedStat.Defense /
-        50 +
-        2) *
-        finalMultiplicator
-    );
+    const physicalAttackStatOrSpecial =
+      attackDetails.Contact === "Physic"
+        ? {
+            pokemonRootCalculatedAttackStat: pokemonRoot.CalculatedStat.Attack,
+            pokemonTargetCalculatedDefenseStat:
+              pokemonTarget.CalculatedStat.Defense,
+          }
+        : {
+            pokemonRootCalculatedAttackStat:
+              pokemonRoot.CalculatedStat.SpeAttack,
+            pokemonTargetCalculatedDefenseStat:
+              pokemonTarget.CalculatedStat.SpeDefense,
+          };
+    const result = {
+      HpLost: Math.floor(
+        (((pokemonRoot.Level * 0.4 + 2) *
+          physicalAttackStatOrSpecial.pokemonRootCalculatedAttackStat *
+          attackDetails.Power) /
+          physicalAttackStatOrSpecial.pokemonTargetCalculatedDefenseStat /
+          50 +
+          2) *
+          finalMultiplicator
+      ),
+      Stab: stab,
+      Efficacity: efficacity,
+      IsACrit: critChance === 2,
+      Roll: roll,
+      DamageType: attackDetails.Contact,
+    };
+    return result;
   }
   #initPlayerGameStateData(teamData, teamDataState) {
     return {
       ActivePokemon: teamData.ActivePokemonIndex,
+      Name: teamData.Name,
       Pokemons: teamData.Pokemons.map((item, index) => ({
         Name: item.Name,
         Status: [],
